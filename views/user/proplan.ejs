@@ -1,0 +1,187 @@
+<%- include("header") %>
+
+<!-- HERO -->
+<section class="py-24 px-6 text-center bg-gradient-to-b from-indigo-500/20 via-slate-900 to-slate-950">
+
+  <h1 class="text-5xl font-extrabold text-white mb-6">
+    Pro Plan Bundle
+  </h1>
+
+  <p class="text-slate-400 max-w-2xl mx-auto text-lg">
+    Advanced portfolio strategies + premium trading education 
+    combined into one professional growth package.
+  </p>
+
+</section>
+
+
+
+<!-- PRO PLAN CARD -->
+<section class="py-20 px-6 max-w-5xl mx-auto">
+
+  <div class="bg-slate-900 rounded-3xl border border-indigo-500 shadow-2xl overflow-hidden">
+
+    <!-- HEADER -->
+    <div class="p-10 text-center border-b border-slate-800">
+
+      <h2 class="text-3xl font-bold text-white mb-4">
+        Pro Plan Access
+      </h2>
+
+      <p class="text-slate-400 mb-6">
+        Everything serious traders need to scale capital responsibly.
+      </p>
+
+      <!-- PRICE DISPLAY -->
+      <div class="mb-6">
+
+        <% 
+          let totalValue = 0;
+          portfolios.forEach(p => totalValue += Number(p.price));
+          courses.forEach(c => totalValue += Number(c.details.price));
+        %>
+
+        <p class="text-slate-500 line-through text-lg">
+          Total Value ₹<%= totalValue %>
+        </p>
+
+        <p class="text-4xl font-bold text-indigo-400">
+          ₹<%= proPlanPrice %> 
+          <span class="text-lg text-slate-400">/month</span>
+        </p>
+
+      </div>
+
+      <form action="/user/add-to-cart" method="POST">
+  <input type="hidden" name="itemId" value="<%= proPlan._id %>">
+  <input type="hidden" name="itemType" value="plan">
+
+  <button type="submit"
+    class="inline-block bg-indigo-600 hover:bg-indigo-700 
+           px-12 py-4 rounded-xl font-semibold shadow-xl">
+    Activate Pro Plan
+  </button>
+</form>
+
+    </div>
+
+
+
+    <!-- INCLUDED PORTFOLIOS -->
+    <div class="p-10 border-b border-slate-800">
+
+      <h3 class="text-2xl font-semibold text-white mb-8">
+        Included Portfolios
+      </h3>
+
+      <% if (portfolios && portfolios.length > 0) { %>
+
+        <div class="space-y-6">
+
+          <% portfolios.forEach(function(portfolio){ %>
+
+            <div class="flex justify-between items-center bg-slate-800 p-6 rounded-xl">
+
+              <div>
+                <h4 class="text-white font-semibold text-lg">
+                  <%= portfolio.name %>
+                </h4>
+                <p class="text-slate-400 text-sm">
+                  <%= portfolio.riskLevel %> Risk • 
+                  ROI <%= portfolio.performanceSummary.averageAnnualROI %>%
+                </p>
+              </div>
+
+              <span class="text-indigo-400 font-semibold">
+                Included
+              </span>
+
+            </div>
+
+          <% }) %>
+
+        </div>
+
+      <% } else { %>
+
+        <p class="text-slate-500">No portfolios included.</p>
+
+      <% } %>
+
+    </div>
+
+
+
+    <!-- INCLUDED COURSES -->
+    <div class="p-10">
+
+      <h3 class="text-2xl font-semibold text-white mb-8">
+        Included Courses
+      </h3>
+
+      <% if (courses && courses.length > 0) { %>
+
+        <div class="space-y-6">
+
+          <% courses.forEach(function(course){ %>
+
+            <div class="flex justify-between items-center bg-slate-800 p-6 rounded-xl">
+
+              <div>
+                <h4 class="text-white font-semibold text-lg">
+                  <%= course.title %>
+                </h4>
+                <p class="text-slate-400 text-sm">
+                  Structured professional trading curriculum
+                </p>
+              </div>
+
+              <span class="text-indigo-400 font-semibold">
+                Included
+              </span>
+
+            </div>
+
+          <% }) %>
+
+        </div>
+
+      <% } else { %>
+
+        <p class="text-slate-500">No courses included.</p>
+
+      <% } %>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- FOOTER CTA -->
+<section class="py-20 text-center bg-slate-950">
+
+  <h3 class="text-3xl font-bold text-white mb-4">
+    One Plan. Complete Trading Structure.
+  </h3>
+
+  <p class="text-slate-400 mb-8">
+    Portfolio discipline + execution knowledge in a single upgrade.
+  </p>
+
+      <form action="/user/add-to-cart" method="POST">
+  <input type="hidden" name="itemId" value="<%= proPlan._id %>">
+  <input type="hidden" name="itemType" value="plan">
+
+  <button type="submit"
+    class="inline-block bg-indigo-600 hover:bg-indigo-700 
+           px-12 py-4 rounded-xl font-semibold shadow-xl">
+    Upgrade Now
+  </button>
+</form>
+
+</section>
+
+<%- include("footer") %>

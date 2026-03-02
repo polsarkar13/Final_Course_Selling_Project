@@ -1,0 +1,204 @@
+<%- include("header") %>
+
+<!-- HERO SECTION -->
+<section class="bg-gradient-to-b from-primary/20 via-slate-900 to-slate-950 py-20 px-6 text-white">
+
+<div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+
+  <!-- LEFT CONTENT -->
+  <div>
+
+    <span class="px-4 py-1 rounded-full text-sm font-semibold
+    <%= portfolio.riskLevel === 'Low'
+      ? 'bg-emerald-100 text-emerald-600'
+      : portfolio.riskLevel === 'Moderate'
+      ? 'bg-blue-100 text-blue-600'
+      : 'bg-purple-100 text-purple-600' %>">
+      <%= portfolio.riskLevel %> Risk Portfolio
+    </span>
+
+    <h1 class="text-4xl md:text-5xl font-extrabold mt-6 mb-6">
+      <%= portfolio.name %>
+    </h1>
+
+    <p class="text-slate-400 leading-relaxed mb-8">
+      <%= portfolio.description %>
+    </p>
+
+       <!-- Price Section -->
+      <div class="flex items-center gap-6 mb-8">
+  <div>
+    <span class="text-3xl font-bold text-primary">
+      ₹<%= portfolio.price.toLocaleString() %>
+    </span>
+  </div>
+</div>
+
+    <!-- PRIMARY CTA -->
+    <form action="/user/add-to-cart" method="POST">
+  <input type="hidden" name="itemId" value="<%= portfolio._id %>">
+  <input type="hidden" name="itemType" value="portfolio">
+
+  <button type="submit"
+    class="group bg-primary hover:bg-primary/90 
+           text-white px-10 py-4 rounded-2xl font-semibold text-lg
+           transition-all duration-300
+           shadow-xl shadow-primary/30
+           hover:shadow-primary/50 hover:-translate-y-1
+           flex items-center justify-center gap-3 w-full">
+
+    <i class="fas fa-shopping-cart text-sm group-hover:scale-110 transition"></i>
+    Add to Cart
+  </button>
+</form>
+
+
+  <!-- SECONDARY CTA -->
+  <a href="https://wa.me/917908538916"
+     target="_blank"
+     class="group border border-emerald-500/60 
+            text-emerald-500 hover:bg-emerald-500 
+            hover:text-white
+            px-10 py-4 rounded-2xl font-semibold text-lg
+            transition-all duration-300
+            hover:-translate-y-1
+            flex items-center justify-center gap-3">
+
+      <i class="fab fa-whatsapp group-hover:scale-110 transition"></i>
+      Enquire on WhatsApp
+  </a>
+
+  </div>
+
+  <!-- RIGHT STATS CARD -->
+  <div class="bg-slate-900 border border-slate-800 rounded-3xl p-10 shadow-xl">
+
+    <div class="text-center mb-10">
+      <h3 class="text-slate-400 mb-2">Average Annual ROI</h3>
+      <div class="text-5xl font-extrabold text-primary">
+        <%= portfolio.performanceSummary?.averageAnnualROI %>%
+      </div>
+    </div>
+
+    <div class="space-y-5 text-slate-300 text-sm">
+
+      <div class="flex justify-between">
+        <span>Max Risk Per Day</span>
+        <span class="font-semibold text-white">
+          <%= portfolio.performanceSummary?.maxRiskPerDay %>%
+        </span>
+      </div>
+
+      <div class="flex justify-between">
+        <span>Capital Allocation (Expiry)</span>
+        <span class="font-semibold text-white">
+          <%= portfolio.performanceSummary?.capitalExpiryDays %>%
+        </span>
+      </div>
+
+      <div class="flex justify-between">
+        <span>Capital Allocation (Non-Expiry)</span>
+        <span class="font-semibold text-white">
+          <%= portfolio.performanceSummary?.capitalNonExpiryDays %>%
+        </span>
+      </div>
+
+      <div class="flex justify-between">
+        <span>Historical Max Drawdown</span>
+        <span class="font-semibold text-red-400">
+          <%= portfolio.performanceSummary?.historicalMaxDD %>%
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+</section>
+
+
+<!-- PERFORMANCE CHARTS -->
+<section class="py-20 px-6 bg-slate-950 text-white">
+
+<div class="max-w-6xl mx-auto">
+
+  <h2 class="text-3xl font-bold text-center mb-12">
+    Performance Insights
+  </h2>
+
+  <div class="grid md:grid-cols-3 gap-8">
+
+    <% if(portfolio.charts?.equityCurve){ %>
+      <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
+        <h4 class="mb-4 font-semibold">Equity Curve</h4>
+        <img src="<%= portfolio.charts.equityCurve %>" class="rounded-xl">
+      </div>
+    <% } %>
+
+    <% if(portfolio.charts?.monthlyReport){ %>
+      <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
+        <h4 class="mb-4 font-semibold">Monthly Report</h4>
+        <img src="<%= portfolio.charts.monthlyReport %>" class="rounded-xl">
+      </div>
+    <% } %>
+
+    <% if(portfolio.charts?.performanceStats){ %>
+      <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
+        <h4 class="mb-4 font-semibold">Performance Stats</h4>
+        <img src="<%= portfolio.charts.performanceStats %>" class="rounded-xl">
+      </div>
+    <% } %>
+
+  </div>
+
+</div>
+
+</section>
+
+
+<!-- HIGHLIGHTS -->
+<section class="py-20 px-6 bg-slate-900 text-white">
+
+<div class="max-w-5xl mx-auto">
+
+  <h2 class="text-3xl font-bold text-center mb-12">
+    Portfolio Highlights
+  </h2>
+
+  <div class="grid md:grid-cols-2 gap-8">
+
+    <% portfolio.highlights.forEach(item => { %>
+      <div class="flex items-start gap-4 bg-slate-800 p-6 rounded-2xl border border-slate-700">
+        <i class="fas fa-check-circle text-primary text-xl mt-1"></i>
+        <p class="text-slate-300"><%= item %></p>
+      </div>
+    <% }) %>
+
+  </div>
+
+</div>
+
+</section>
+
+
+<!-- FINAL CTA -->
+<section class="py-16 bg-gradient-to-r from-green-600 to-emerald-600 text-center text-white">
+
+<h2 class="text-3xl font-bold mb-6">
+Secure & Consistent Wealth Creation
+</h2>
+
+<p class="mb-8">
+Invest with discipline. Grow with confidence.
+</p>
+
+<a href="/user/contact"
+   class="bg-white text-green-600 px-8 py-3 rounded-xl font-semibold">
+   Start Investing →
+</a>
+
+</section>
+
+<%- include("footer") %>

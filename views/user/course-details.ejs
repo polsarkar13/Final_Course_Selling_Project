@@ -1,0 +1,240 @@
+<%- include("header") %>
+
+<section class="bg-slate-950 text-white py-16 px-6">
+
+<div class="max-w-6xl mx-auto">
+
+  <!-- TOP SECTION -->
+  <div class="grid md:grid-cols-2 gap-12 items-start">
+
+    <!-- COURSE IMAGE -->
+    <div>
+      <img src="<%= course.image.thumbnail %>" 
+           class="rounded-3xl shadow-2xl border border-slate-800 w-full object-cover">
+    </div>
+
+    <!-- COURSE INFO -->
+    <div>
+
+      <span class="text-primary font-semibold">
+        <%= course.category %>
+      </span>
+
+      <h1 class="text-4xl md:text-5xl font-extrabold mt-3 mb-6">
+        <%= course.title %>
+      </h1>
+
+      <!-- Stats -->
+      <div class="flex flex-wrap gap-6 text-slate-400 mb-8">
+
+        <span>⭐ <%= course.details.rating || 0 %></span>
+
+        <span>
+          <i class="fas fa-clock mr-2"></i>
+          <%= course.details.durationDays %> Days
+        </span>
+
+        <span>
+          <i class="fas fa-users mr-2"></i>
+          <%= course.details.studentsEnrolled || 0 %> Students
+        </span>
+
+      </div>
+
+      <!-- Price Section -->
+      <div class="flex items-center gap-6 mb-8">
+
+  <div>
+    <span class="text-3xl font-bold text-primary">
+      ₹<%= course.details.price.toLocaleString() %>
+    </span>
+
+    <% if(course.details.originalPrice && course.details.originalPrice > course.details.price){ %>
+      <span class="text-slate-500 line-through ml-3">
+        ₹<%= course.details.originalPrice.toLocaleString()|| 0%>
+      </span>
+    <% } %>
+
+  </div>
+
+</div>
+
+  <div class="flex flex-col sm:flex-row gap-4 mt-8">
+
+  <!-- PRIMARY CTA -->
+  <form action="/user/add-to-cart" method="POST">
+  <input type="hidden" name="itemId" value="<%= course._id %>">
+  <input type="hidden" name="itemType" value="course">
+
+  <button type="submit"
+    class="group bg-primary hover:bg-primary/90 
+           text-white px-10 py-4 rounded-2xl font-semibold text-lg
+           transition-all duration-300
+           shadow-xl shadow-primary/30
+           hover:shadow-primary/50 hover:-translate-y-1
+           flex items-center justify-center gap-3 w-full">
+
+    <i class="fas fa-shopping-cart text-sm group-hover:scale-110 transition"></i>
+    Add to Cart
+  </button>
+</form>
+
+
+  <!-- SECONDARY CTA -->
+  <a href="https://wa.me/917908538916"
+     target="_blank"
+     class="group border border-emerald-500/60 
+            text-emerald-500 hover:bg-emerald-500 
+            hover:text-white
+            px-10 py-4 rounded-2xl font-semibold text-lg
+            transition-all duration-300
+            hover:-translate-y-1
+            flex items-center justify-center gap-3">
+
+      <i class="fab fa-whatsapp group-hover:scale-110 transition"></i>
+      Enquire on WhatsApp
+  </a>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- ABOUT SECTION -->
+<section class="py-20 px-6 bg-slate-900 text-white">
+
+<div class="max-w-5xl mx-auto">
+
+  <h2 class="text-3xl font-bold mb-6">
+    About this Course
+  </h2>
+
+  <p class="text-slate-400 leading-relaxed">
+    <%= course.description %>
+  </p>
+
+</div>
+
+</section>
+
+
+<!-- INSIDE THE COURSE -->
+<section class="py-20 px-6 bg-slate-950 text-white">
+
+<div class="max-w-6xl mx-auto">
+
+  <h2 class="text-3xl font-bold mb-10">
+    Inside the Course
+  </h2>
+
+  <div class="grid md:grid-cols-2 gap-6">
+
+    <% if(course.highlights){ %>
+      <% course.highlights.forEach(item => { %>
+        <div class="flex items-center gap-4 bg-slate-900 p-5 rounded-2xl border border-slate-800">
+          <i class="fas fa-check-circle text-primary text-xl"></i>
+          <span class="text-slate-300"><%= item %></span>
+        </div>
+      <% }) %>
+    <% } %>
+
+  </div>
+
+</div>
+
+</section>
+
+
+<!-- COURSE MODULES -->
+<section class="py-20 px-6 bg-slate-900 text-white">
+
+<div class="max-w-6xl mx-auto">
+
+  <h2 class="text-3xl font-bold mb-10">
+    Course Modules
+  </h2>
+
+  <div class="grid md:grid-cols-2 gap-6">
+
+    <% if(course.courseModules){ %>
+      <% course.courseModules.forEach((module, index) => { %>
+
+        <div class="flex items-center gap-5 bg-slate-800 border border-slate-700 p-6 rounded-2xl">
+
+          <div class="w-10 h-10 flex items-center justify-center
+                      rounded-full bg-primary text-white font-bold">
+            <%= index + 1 %>
+          </div>
+
+          <span class="text-slate-300 font-medium">
+            <%= module %>
+          </span>
+
+        </div>
+
+      <% }) %>
+    <% } %>
+
+  </div>
+
+</div>
+
+</section>
+
+
+<!-- FAQ SECTION -->
+<section class="py-20 px-6 bg-slate-950 text-white">
+
+<div class="max-w-5xl mx-auto">
+
+  <h2 class="text-3xl font-bold mb-10">
+    FAQs
+  </h2>
+
+  <!-- Static FAQs (you can later make dynamic) -->
+
+  <div class="space-y-6">
+
+    <details class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
+      <summary class="cursor-pointer font-semibold">
+        Is this course suitable for beginners?
+      </summary>
+      <p class="text-slate-400 mt-4">
+        This program is best suited for traders who have basic knowledge of options.
+      </p>
+    </details>
+
+    <details class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
+      <summary class="cursor-pointer font-semibold">
+        Does it cover risk management?
+      </summary>
+      <p class="text-slate-400 mt-4">
+        Yes, strong emphasis is given to drawdown control and hedging techniques.
+      </p>
+    </details>
+
+  </div>
+
+</div>
+
+</section>
+
+
+<!-- BOTTOM CTA -->
+<section class="py-16 bg-gradient-to-r from-green-600 to-emerald-600 text-center text-white">
+
+<h2 class="text-3xl font-bold mb-6">
+Ready to Master Options Selling?
+</h2>
+
+<a href="/user/contact"
+   class="bg-white text-green-600 px-8 py-3 rounded-xl font-semibold">
+   Enquire Now →
+</a>
+
+</section>
+
+<%- include("footer") %>

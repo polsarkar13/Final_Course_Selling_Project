@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<style>
+@keyframes float {
+0% { transform: translateY(0px); }
+50% { transform: translateY(-20px); }
+100% { transform: translateY(0px); }
+}
+
+h1{
+animation: float 8s ease-in-out infinite;
+}
+</style>
+
+
+<title>Admin Login | AlgoMoney</title>
+</head>
+
+<%- include("../partials/toast") %>
+
+<body class="bg-slate-100 flex items-center justify-center min-h-screen relative overflow-hidden">
+
+
+<!-- SOFT BACKGROUND TEXT -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+
+<h1 class="text-[10vw] font-extrabold text-slate-200 tracking-widest select-none">
+AlgoMoney
+</h1>
+
+</div>
+
+
+
+<!-- LOGIN CARD -->
+<div class="relative z-10 bg-white w-full max-w-md p-10 rounded-2xl shadow-lg border border-slate-200">
+
+<!-- HEADER -->
+<div class="text-center mb-8">
+
+<h1 class="text-3xl font-bold text-slate-900">
+⚡ AlgoMoney Admin
+</h1>
+
+<p class="text-slate-500 mt-2">
+Secure login to the administrator panel
+</p>
+
+</div>
+
+
+
+<!-- FORM -->
+<form action="/admin/login" method="POST" class="space-y-6">
+
+<!-- EMAIL -->
+<div>
+<label class="text-sm font-semibold text-slate-600">
+Admin Email
+</label>
+
+<div class="relative mt-2">
+<i class="fa fa-envelope absolute top-4 left-3 text-slate-400"></i>
+
+<input
+type="email"
+name="email"
+required
+class="w-full pl-10 pr-4 py-3 rounded-xl bg-white border border-slate-300 focus:border-slate-900 focus:ring-1 focus:ring-slate-900 outline-none transition"
+placeholder="admin@algomoney.com"
+/>
+</div>
+</div>
+
+
+
+<!-- PASSWORD -->
+<div>
+<label class="text-sm font-semibold text-slate-600">
+Password
+</label>
+
+<div class="relative mt-2">
+<i class="fa fa-lock absolute top-4 left-3 text-slate-400"></i>
+
+<input
+type="password"
+name="password"
+required
+class="w-full pl-10 pr-4 py-3 rounded-xl bg-white border border-slate-300 focus:border-slate-900 focus:ring-1 focus:ring-slate-900 outline-none transition"
+placeholder="Enter your password"
+/>
+</div>
+</div>
+
+
+
+<!-- REMEMBER -->
+<div class="flex items-center justify-between text-sm">
+
+<a href="/admin/forgot-password"
+class="font-semibold text-slate-900 hover:underline">
+Forgot Password?
+</a>
+
+</div>
+
+
+
+<!-- BUTTON -->
+<button
+class="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-xl font-semibold text-lg transition">
+Login to Admin Panel
+</button>
+
+</form>
+
+
+
+<!-- SIGNUP -->
+<p class="text-center text-slate-600 mt-6">
+Don't have an admin account?
+
+<a href="/admin/signup"
+class="font-semibold text-slate-900 hover:underline ml-1">
+Create one
+</a>
+
+</p>
+
+
+<p class="text-center text-slate-400 mt-6 text-sm">
+Restricted to authorized personnel only.
+</p>
+
+</div>
+
+</body>
+</html>

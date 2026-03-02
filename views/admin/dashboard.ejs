@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+
+    <title>Admin Dashboard</title>
+
+    <style>
+        /* Chat panel slides in smoothly */
+        #chat-panel {
+            width: 0;
+            overflow: hidden;
+            transition: width 0.3s ease;
+        }
+
+        #chat-panel.open {
+            width: 320px;
+        }
+
+        /* Notification dropdown hidden by default */
+        #notif-dropdown {
+            display: none;
+        }
+
+        #notif-dropdown.open {
+            display: block;
+        }
+
+        /* Chat message bubbles */
+        .msg-from-user {
+            background: #1e293b;
+            color: white;
+            border-radius: 16px 16px 4px 16px;
+            padding: 8px 14px;
+            max-width: 220px;
+            font-size: 14px;
+        }
+
+        .msg-from-admin {
+            background: #e2e8f0;
+            color: #1e293b;
+            border-radius: 16px 16px 16px 4px;
+            padding: 8px 14px;
+            max-width: 220px;
+            font-size: 14px;
+        }
+
+        /* Scroll inside chat messages area */
+        #chat-messages {
+            overflow-y: auto;
+            height: 400px;
+        }
+    </style>
+</head>
+
+<%- include("../partials/toast") %>
+
+    <body class="bg-slate-100">
+
+        <div class="flex min-h-screen">
+
+            <!-- SIDEBAR -->
+            <aside class="w-72 bg-slate-900 text-white p-6">
+
+                <h1 class="text-2xl font-bold mb-10">
+                    ⚡ AlgoMoney Admin
+                </h1>
+
+                <nav class="space-y-3">
+
+                    <a href="/admin/dashboard" class="block bg-slate-800 px-4 py-3 rounded-lg">
+                        <i class="fa fa-chart-line mr-2"></i> Dashboard
+                    </a>
+
+                    <a href="/admin/users" class="block hover:bg-slate-800 px-4 py-3 rounded-lg">
+                        <i class="fa fa-users mr-2"></i> Users
+                    </a>
+
+                    <a href="/admin/plans" class="block hover:bg-slate-800 px-4 py-3 rounded-lg">
+                        <i class="fa fa-layer-group mr-2"></i> Plans
+                    </a>
+
+                    <a href="/admin/portfolio-management" class="block hover:bg-slate-800 px-4 py-3 rounded-lg">
+                        <i class="fa fa-briefcase mr-2"></i> Portfolio Management
+                    </a>
+
+                    <a href="/admin/courses" class="block hover:bg-slate-800 px-4 py-3 rounded-lg">
+                        <i class="fa fa-graduation-cap mr-2"></i> Courses
+                    </a>
+
+                    <a href="/admin/payments" class="block hover:bg-slate-800 px-4 py-3 rounded-lg">
+                        <i class="fa fa-credit-card mr-2"></i> Payments
+                    </a>
+
+                    <a href="/admin/profile" class="block hover:bg-slate-800 px-4 py-3 rounded-lg">
+                        <i class="fa fa-cog mr-2"></i> Profile
+                    </a>
+
+                    <!-- ✅ ADDED: Chat link in sidebar -->
+                    <button onclick="openChatPanel()"
+                        class="w-full text-left flex items-center justify-between hover:bg-slate-800 px-4 py-3 rounded-lg">
+                        <span><i class="fa fa-comments mr-2"></i> Chat with Users</span>
+                        <!--
+                            This badge shows unread message count.
+                            In your Node.js route, pass: res.render('admin/dashboard', { unreadCount: 3, ... })
+                            Then replace the "3" below with: <%%= unreadCount %>
+                        -->
+                        <span class="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">3</span>
+                    </button>
+
+                    <a href="/admin/logout" class="block hover:bg-red-500 mt-10 px-4 py-3 rounded-lg">
+                        Logout
+                    </a>
+
+                </nav>
+            </aside>
+
+
+            <!-- ✅ ADDED: Chat Panel — slides in beside the sidebar when opened -->
+            <div id="chat-panel" class="bg-white border-r border-slate-200 flex flex-col min-h-screen">
+
+                <!-- Inner wrapper keeps content from squishing during slide animation -->
+                <div style="width: 320px;">
+
+                    <!-- VIEW 1: User List (shown first) -->
+                    <div id="user-list-view">
+
+                        <!-- Header -->
+                        <div class="flex items-center justify-between p-4 border-b border-slate-200 bg-slate-50">
+                            <h3 class="font-bold text-slate-800">Messages</h3>
+                            <button onclick="closeChatPanel()" class="text-slate-400 hover:text-slate-700">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
+
+                        <!--
+                            USER LIST — loops through your existing `users` array from the route.
+                            Clicking a user opens the chat with them.
+                            The user._id is passed so we can link to their profile page.
+                        -->
+                        <div class="divide-y divide-slate-100">
+
+                            <% users.forEach(function(user) { %>
+                                <div onclick="openChat('<%= user.firstName %>', '<%= user._id %>')"
+                                    class="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 cursor-pointer">
+                                    <!-- Avatar with first letter of name -->
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-slate-700 text-white flex items-center justify-center font-bold flex-shrink-0">
+                                        <%= user.firstName.charAt(0).toUpperCase() %>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-slate-800 text-sm">
+                                            <%= user.firstName %>
+                                        </p>
+                                        <p class="text-xs text-slate-500">
+                                            <%= user.email %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <% }) %>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- VIEW 2: Individual Chat (hidden until a user is clicked) -->
+                    <div id="chat-view" style="display: none;">
+
+                        <!-- Chat Header -->
+                        <div class="flex items-center gap-3 p-4 border-b border-slate-200 bg-slate-50">
+                            <button onclick="backToUserList()" class="text-slate-400 hover:text-slate-700">
+                                <i class="fa fa-arrow-left"></i>
+                            </button>
+                            <!-- Filled in by JavaScript when a user is clicked -->
+                            <p class="font-bold text-slate-800" id="chat-with-name"></p>
+                            <!-- View Profile link — href is also set by JavaScript -->
+                            <a id="view-profile-link" href="#" class="ml-auto text-xs text-indigo-500 hover:underline">
+                                View Profile
+                            </a>
+                        </div>
+
+                        <!-- Messages Area -->
+                        <!--
+                            Messages show up here.
+                            To load real messages from your DB, use fetch() inside the openChat() function below.
+                            See the comments in the JavaScript section at the bottom of this file.
+                        -->
+                        <div id="chat-messages" class="p-4 space-y-3 bg-slate-50">
+                            <p class="text-center text-xs text-slate-400">Start of conversation</p>
+                        </div>
+
+                        <!-- Message Input -->
+                        <div class="flex gap-2 p-3 border-t border-slate-200 bg-white">
+                            <input type="text" id="chat-input" placeholder="Type a message..."
+                                class="flex-1 bg-slate-100 rounded-full px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-400"
+                                onkeydown="if(event.key === 'Enter') sendMessage()" />
+                            <button onclick="sendMessage()"
+                                class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-full text-sm">
+                                Send
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <!-- END Chat Panel -->
+
+
+
+            <!-- MAIN -->
+            <main class="flex-1 p-10">
+
+                <!-- TOP BAR -->
+                <div class="flex justify-between items-center mb-10">
+
+                    <h2 class="text-3xl font-bold">
+                        Admin Dashboard
+                    </h2>
+
+                    <div class="flex items-center gap-4">
+
+                        <!-- ✅ ADDED: Notification Bell -->
+                        <div class="relative" id="notif-wrapper">
+
+                            <button onclick="toggleNotifications()"
+                                class="relative w-10 h-10 bg-white rounded-full shadow flex items-center justify-center hover:bg-slate-50">
+                                <i class="fa fa-bell text-slate-600 text-lg"></i>
+                                <!--
+                                    Notification count badge.
+                                    In your Node.js route, pass notifCount:
+                                      res.render('admin/dashboard', { notifCount: 4, ... })
+                                    Then replace the "4" below with: <%%= notifCount %>
+                                -->
+                                <span
+                                    class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">4</span>
+                            </button>
+
+                            <!-- Notification Dropdown -->
+                            <div id="notif-dropdown"
+                                class="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-slate-100 z-50">
+
+                                <div class="px-5 py-3 border-b border-slate-100">
+                                    <h4 class="font-bold text-slate-800">Notifications</h4>
+                                </div>
+
+                                <!--
+                                    NOTIFICATION LIST
+                                    In your Node.js route, query pending/unread messages and pass them:
+                                      const notifications = await Message.find({ read: false }).populate('userId');
+                                      res.render('admin/dashboard', { notifications, ... })
+
+                                    Then replace the placeholder below with this EJS loop:
+
+                                    <% notifications.forEach(function(notif) { %>
+                                        <div class="flex items-start gap-3 px-5 py-4 hover:bg-slate-50 border-b cursor-pointer"
+                                             onclick="openChatPanel(); openChat('<%= notif.userId.firstName %>', '<%= notif.userId._id %>')">
+                                            <i class="fa fa-comment text-slate-400 mt-1"></i>
+                                            <div>
+                                                <p class="text-sm font-semibold text-slate-800"><%= notif.userId.firstName %></p>
+                                                <p class="text-xs text-slate-500"><%= notif.message %></p>
+                                                <p class="text-xs text-slate-400 mt-1"><%= notif.createdAt.toDateString() %></p>
+                                            </div>
+                                        </div>
+                                    <% }) %>
+                                -->
+                                <div class="px-5 py-4 text-sm text-slate-500">
+                                    No new notifications.
+                                    <!-- Replace this line with the EJS loop above once your backend is ready -->
+                                </div>
+
+                                <div class="px-5 py-3 border-t border-slate-100">
+                                    <button onclick="document.getElementById('notif-dropdown').classList.remove('open')"
+                                        class="text-xs text-slate-400 hover:text-slate-700">
+                                        Close
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- END Notification Bell -->
+
+                        <span class="font-semibold">
+                            <%= admin.name %>
+                        </span>
+
+                        <img src="https://i.pravatar.cc/150?img=12" class="w-10 h-10 rounded-full" />
+                    </div>
+
+                </div>
+
+
+
+                <!-- KPI CARDS — unchanged from your original -->
+                <div class="grid md:grid-cols-4 gap-6 mb-10">
+
+                    <div class="bg-white p-6 rounded-2xl shadow">
+                        <p class="text-gray-500">Revenue</p>
+                        <h3 class="text-3xl font-bold mt-2">₹ <%= stats.revenue %>
+                        </h3>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow">
+                        <p class="text-gray-500">Users</p>
+                        <h3 class="text-3xl font-bold mt-2">
+                            <%= stats.users %>
+                        </h3>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow">
+                        <p class="text-gray-500">Active Courses</p>
+                        <h3 class="text-3xl font-bold mt-2 text-green-600">
+                            <%= stats.courses %>
+                        </h3>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow">
+                        <p class="text-gray-500">Active Portfolio</p>
+                        <h3 class="text-3xl font-bold mt-2 text-green-600">
+                            <%= stats.portfolios %>
+                        </h3>
+                    </div>
+
+                </div>
+
+
+
+                <!-- USERS TABLE — unchanged from your original -->
+                <div class="bg-white rounded-2xl shadow p-6 mb-10">
+
+                    <div class="flex justify-between mb-4">
+                        <h3 class="text-xl font-bold">Recent Users</h3>
+                        <a href="/admin/users" class="bg-slate-900 text-white px-4 py-2 rounded-lg">View All</a>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="border-b">
+                                    <th class="p-3">Name</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% users.forEach(user=>{ %>
+                                    <tr class="border-b hover:bg-slate-50">
+                                        <td class="p-3 font-medium">
+                                            <%= user.firstName %>
+                                        </td>
+                                        <td>
+                                            <%= user.email %>
+                                        </td>
+                                        <td>
+                                            <span
+                                                class="px-3 py-1 rounded-full text-sm
+                                                <%= user.isActive ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' %>">
+                                                <%= user.isActive ? "Active" : "Blocked" %>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+
+
+                <!-- RECENT PAYMENTS — unchanged from your original -->
+                <div class="bg-white rounded-2xl shadow p-6">
+
+                    <h3 class="text-xl font-bold mb-4">Recent Payments</h3>
+
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="p-3">User</th>
+                                <th>Plan</th>
+                                <th>Course</th>
+                                <th>Portfolio</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% payments.forEach(pay=> { %>
+                                <tr class="border-b text-center">
+
+                                    <!-- USER -->
+                                    <td class="p-3">
+                                        <%= pay.user ? pay.user.firstName : "N/A" %>
+                                    </td>
+
+                                    <!-- PLAN -->
+                                    <td>
+                                        <% const planItem=pay.items.find(i=> i.itemType === "plan");
+                                            %>
+                                            <%= planItem ? planItem.title : "-" %>
+                                    </td>
+
+                                    <!-- COURSE -->
+                                    <td>
+                                        <% const courseItem=pay.items.find(i=> i.itemType === "course");
+                                            %>
+                                            <%= courseItem ? courseItem.title : "-" %>
+                                    </td>
+
+                                    <!-- PORTFOLIO -->
+                                    <td>
+                                        <% const portfolioItem=pay.items.find(i=> i.itemType === "portfolio");
+                                            %>
+                                            <%= portfolioItem ? portfolioItem.title : "-" %>
+                                    </td>
+
+                                    <!-- AMOUNT -->
+                                    <td class="font-semibold">
+                                        ₹ <%= pay.amount %>
+                                    </td>
+
+                                    <!-- DATE -->
+                                    <td>
+                                        <%= new Date(pay.createdAt).toLocaleDateString() %>
+                                    </td>
+
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </main>
+
+        </div>
+
+
+        <!--
+        =====================================================
+        JAVASCRIPT
+        Simple and beginner-friendly with comments explaining
+        what each function does and how to connect it to your
+        Node.js backend later.
+        =====================================================
+        -->
+        <script>
+
+            // ─── NOTIFICATION BELL ────────────────────────────────────────
+
+            // Toggle the notification dropdown open or closed
+            function toggleNotifications() {
+                const dropdown = document.getElementById('notif-dropdown');
+                dropdown.classList.toggle('open');
+            }
+
+            // Close the dropdown if admin clicks anywhere outside it
+            document.addEventListener('click', function (event) {
+                const wrapper = document.getElementById('notif-wrapper');
+                const dropdown = document.getElementById('notif-dropdown');
+                if (wrapper && !wrapper.contains(event.target)) {
+                    dropdown.classList.remove('open');
+                }
+            });
+
+
+            // ─── CHAT PANEL ───────────────────────────────────────────────
+
+            // Open the chat panel (slide in from left)
+            function openChatPanel() {
+                document.getElementById('chat-panel').classList.add('open');
+            }
+
+            // Close the chat panel
+            function closeChatPanel() {
+                document.getElementById('chat-panel').classList.remove('open');
+            }
+
+            // Called when admin clicks a user in the list
+            // name   = user's firstName from EJS
+            // userId = user's MongoDB _id from EJS (used to build profile link)
+            function openChat(name, userId) {
+
+                // Switch views: hide user list, show chat window
+                document.getElementById('user-list-view').style.display = 'none';
+                document.getElementById('chat-view').style.display = 'block';
+
+                // Update the chat header with the selected user's name
+                document.getElementById('chat-with-name').textContent = name;
+
+                // Update the "View Profile" link
+                // Change '/admin/users/' to match your actual route if it's different
+                document.getElementById('view-profile-link').href = '/admin/users/' + userId;
+
+                // Reset messages to a clean state
+                document.getElementById('chat-messages').innerHTML =
+                    '<p class="text-center text-xs text-slate-400">Start of conversation</p>';
+
+                /*
+                HOW TO LOAD REAL MESSAGES FROM YOUR DATABASE:
+                -----------------------------------------------
+                Step 1 — Create this route in your Node.js admin router:
+
+                    router.get('/admin/messages/:userId', async (req, res) => {
+                        const messages = await Message.find({ userId: req.params.userId }).sort({ createdAt: 1 });
+                        res.json(messages);
+                    });
+
+                Step 2 — Fetch messages here when a user is opened:
+
+                    fetch('/admin/messages/' + userId)
+                        .then(function(res) { return res.json(); })
+                        .then(function(messages) {
+                            messages.forEach(function(msg) {
+                                addMessageToChat(msg.text, msg.fromAdmin);
+                            });
+                        });
+                */
+            }
+
+            // Go back to the user list from the chat window
+            function backToUserList() {
+                document.getElementById('chat-view').style.display = 'none';
+                document.getElementById('user-list-view').style.display = 'block';
+            }
+
+            // Send a message from the input box
+            function sendMessage() {
+                const input = document.getElementById('chat-input');
+                const text = input.value.trim();
+
+                if (!text) return; // do nothing if input is empty
+
+                // Add the bubble to the chat window immediately (admin message = true)
+                addMessageToChat(text, true);
+                input.value = ''; // clear the input box
+
+                /*
+                HOW TO SAVE THE MESSAGE TO YOUR DATABASE:
+                ------------------------------------------
+                Step 1 — Create this route in Node.js:
+
+                    router.post('/admin/messages/send', async (req, res) => {
+                        const { userId, text } = req.body;
+                        await Message.create({ userId, text, fromAdmin: true, createdAt: new Date() });
+                        res.json({ success: true });
+                    });
+
+                Step 2 — After addMessageToChat(), call your route like this:
+
+                    const userId = document.getElementById('view-profile-link').href.split('/').pop();
+
+                    fetch('/admin/messages/send', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId: userId, text: text })
+                    });
+                */
+            }
+
+            // Helper function — creates a chat bubble and adds it to the messages container
+            // fromAdmin: true  = right-side bubble (admin sent this)
+            // fromAdmin: false = left-side bubble  (user sent this)
+            function addMessageToChat(text, fromAdmin) {
+                const container = document.getElementById('chat-messages');
+
+                // Create the outer wrapper (controls left or right alignment)
+                const wrapper = document.createElement('div');
+                wrapper.className = 'flex ' + (fromAdmin ? 'justify-end' : 'justify-start');
+
+                // Create the bubble
+                const bubble = document.createElement('div');
+                bubble.className = fromAdmin ? 'msg-from-admin' : 'msg-from-user';
+                bubble.textContent = text;
+
+                wrapper.appendChild(bubble);
+                container.appendChild(wrapper);
+
+                // Auto-scroll to the latest message
+                container.scrollTop = container.scrollHeight;
+            }
+
+        </script>
+
+    </body>
+
+</html>

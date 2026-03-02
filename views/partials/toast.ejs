@@ -1,0 +1,81 @@
+<!-- ================= TOAST NOTIFICATIONS ================= -->
+
+<% if ((success && success.length > 0) || (error && error.length > 0)) { %>
+
+  <div class="fixed top-24 right-6 z-[9999] space-y-4">
+
+    <!-- SUCCESS TOAST -->
+    <% if (success && success.length > 0) { %>
+      <div id="toast-success"
+           class="bg-emerald-500/90 backdrop-blur-md text-white
+                  px-6 py-4 rounded-2xl shadow-2xl min-w-[280px]
+                  flex items-center justify-between gap-4
+                  transform translate-x-20 opacity-0
+                  transition-all duration-500">
+
+        <div class="flex items-center gap-3">
+          <i class="fa fa-check-circle text-lg"></i>
+          <span class="font-medium"><%= success[0] %></span>
+        </div>
+
+        <button onclick="this.parentElement.remove()"
+                class="text-white/80 hover:text-white transition">
+          <i class="fa fa-times"></i>
+        </button>
+
+      </div>
+    <% } %>
+
+
+    <!-- ERROR TOAST -->
+    <% if (error && error.length > 0) { %>
+      <div id="toast-error"
+           class="bg-red-500/90 backdrop-blur-md text-white
+                  px-6 py-4 rounded-2xl shadow-2xl min-w-[280px]
+                  flex items-center justify-between gap-4
+                  transform translate-x-20 opacity-0
+                  transition-all duration-500">
+
+        <div class="flex items-center gap-3">
+          <i class="fa fa-times-circle text-lg"></i>
+          <span class="font-medium"><%= error[0] %></span>
+        </div>
+
+        <button onclick="this.parentElement.remove()"
+                class="text-white/80 hover:text-white transition">
+          <i class="fa fa-times"></i>
+        </button>
+
+      </div>
+    <% } %>
+
+  </div>
+
+<% } %>
+
+
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+
+    const showToast = (id) => {
+      const toast = document.getElementById(id);
+      if (!toast) return;
+
+      // Animate In
+      setTimeout(() => {
+        toast.classList.remove("translate-x-20", "opacity-0");
+        toast.classList.add("translate-x-0", "opacity-100");
+      }, 100);
+
+      // Auto Remove after 3.5s
+      setTimeout(() => {
+        toast.classList.add("translate-x-20", "opacity-0");
+        setTimeout(() => toast.remove(), 500);
+      }, 3500);
+    };
+
+    showToast("toast-success");
+    showToast("toast-error");
+
+  });
+</script>

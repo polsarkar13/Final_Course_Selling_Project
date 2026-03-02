@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+
+<title>Courses Management</title>
+</head>
+
+<%- include("../partials/toast") %>
+
+<body class="bg-slate-100">
+
+<div class="flex min-h-screen">
+
+<!-- SIDEBAR -->
+<aside class="w-72 bg-slate-900 text-white p-6">
+
+<h1 class="text-2xl font-bold mb-10">
+⚡ AlgoMoney Admin
+</h1>
+
+<nav class="space-y-3">
+
+<a href="/admin/dashboard" class="block hover:bg-slate-800 px-4 py-3 rounded-lg">
+<i class="fa fa-chart-line mr-2"></i> Dashboard
+</a>
+
+<a href="/admin/courses" class="block bg-slate-800 px-4 py-3 rounded-lg">
+<i class="fa fa-graduation-cap mr-2"></i> Courses
+</a>
+
+</nav>
+</aside>
+
+<!-- MAIN -->
+<main class="flex-1 p-10">
+
+<!-- HEADER -->
+<div class="flex justify-between items-center mb-10">
+
+<h2 class="text-3xl font-bold">
+Courses Management
+</h2>
+
+<button onclick="document.getElementById('createModal').classList.remove('hidden')"
+class="bg-slate-900 text-white px-5 py-2 rounded-lg">
++ Create Course
+</button>
+
+</div>
+
+<!-- COURSES TABLE -->
+<div class="bg-white rounded-2xl shadow p-6">
+
+<table class="w-full text-left">
+
+<thead>
+<tr class="border-b">
+<th class="p-3">Title</th>
+<th>Category</th>
+<th>Rating</th>
+<th>Duration</th>
+<th>Price</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+<% courses.forEach(course => { %>
+
+<tr class="border-b hover:bg-slate-50">
+
+<td class="p-3 font-semibold">
+<%= course.title %>
+</td>
+
+<td>
+<%= course.category %>
+</td>
+
+<td>
+⭐ <%= course.details.rating || 0 %>
+</td>
+
+<td>
+<%= course.details.durationDays %> Days
+</td>
+
+<td>
+<%= course.details.price || 0 %>
+</td>
+
+<td>
+<span class="px-3 py-1 rounded-full text-sm
+<%= course.isActive ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' %>">
+<%= course.isActive ? "Active" : "Inactive" %>
+</span>
+</td>
+
+<td class="space-x-3">
+
+<a href="/admin/toggle-course/<%= course._id %>"
+class="text-blue-600 font-semibold">
+Toggle
+</a>
+
+<a href="/admin/update-course/<%= course._id %>"
+class="text-blue-600 font-semibold">
+Update
+</a>
+
+<form action="/admin/delete-course/<%= course._id %>?_method=DELETE" method="POST"
+ onsubmit="return confirm('Are you sure?')">
+<button type="submit" class="text-red-500 font-semibold">
+    Delete
+</button>
+</form>
+
+</td>
+
+</tr>
+
+<% }) %>
+
+</tbody>
+</table>
+
+</div>
+
+</main>
+
+</div>
+
+<!-- ================= CREATE COURSE MODAL ================= -->
+
+<div id="createModal"
+class="fixed inset-0 bg-black/50 hidden overflow-y-auto flex items-start justify-center py-10">
+
+<div class="bg-white w-[800px] rounded-2xl p-8 shadow-2xl">
+
+<h3 class="text-2xl font-bold mb-6">Create Course</h3>
+
+<form action="/admin/create-course" method="POST" enctype="multipart/form-data">
+
+<!-- BASIC INFO -->
+<div class="space-y-4">
+<h4 class="font-bold text-lg">Basic Information</h4>
+
+<input type="text" name="title" placeholder="Course Title"
+class="w-full border p-3 rounded-lg" required>
+
+<input type="text" name="slug" placeholder="Slug (algo-trading-mastery)"
+class="w-full border p-3 rounded-lg" required>
+
+<textarea name="description" placeholder="Short Description"
+class="w-full border p-3 rounded-lg" required></textarea>
+
+<select name="category"
+class="w-full border p-3 rounded-lg" required>
+<option value="">Select Category</option>
+<option value="Theta Edge">Theta Edge</option>
+<option value="Delta Edge">Delta Edge</option>
+<option value="Theta + Delta">Theta + Delta</option>
+</select>
+
+</div>
+
+<!-- Course Thumbnail -->
+<div>
+<label class="block mb-2 font-medium">Course Image</label>
+<input type="file"
+       name="thumbnail"
+       accept="image/*"
+       class="w-full border p-3 rounded-lg bg-white">
+</div>
+
+<!-- COURSE DETAILS -->
+<div class="space-y-4 mt-6">
+<h4 class="block mb-2 font-medium">Course Details</h4>
+
+<div class="grid grid-cols-2 gap-4">
+<input type="number" name="originalPrice" placeholder="Mrp"
+class="border p-3 rounded-lg">
+
+<input type="number" name="price" placeholder="Sell Price"
+class="border p-3 rounded-lg">
+
+<input type="number" name="durationDays" placeholder="Duration (Days)"
+class="border p-3 rounded-lg">
+
+<input type="number" step="0.1" name="rating" placeholder="Rating (4.9)"
+class="border p-3 rounded-lg">
+</div>
+
+<input type="number" name="studentsEnrolled"
+placeholder="Students Enrolled"
+class="w-full border p-3 rounded-lg">
+</div>
+
+<!-- Inside the Course -->
+<div class="space-y-4 mt-6">
+<h4 class="block mb-2 font-medium">Inside the Course</h4>
+
+<input type="text" name="highlight1" placeholder="Feature 1"
+class="w-full border p-3 rounded-lg">
+
+<input type="text" name="highlight2" placeholder="Feature 2"
+class="w-full border p-3 rounded-lg">
+
+<input type="text" name="highlight3" placeholder="Feature 3"
+class="w-full border p-3 rounded-lg">
+
+<input type="text" name="highlight4" placeholder="Feature 4"
+class="w-full border p-3 rounded-lg">
+</div>
+<!-- Course Modules -->
+<div class="space-y-4 mt-6">
+<h4 class="block mb-2 font-medium">Course Modules</h4>
+
+<input type="text" name="courseModule1" placeholder="Module1"
+class="w-full border p-3 rounded-lg">
+
+<input type="text" name="courseModule2" placeholder="Module2"
+class="w-full border p-3 rounded-lg">
+
+<input type="text" name="courseModule3" placeholder="Module3"
+class="w-full border p-3 rounded-lg">
+
+<input type="text" name="courseModule4" placeholder="Module4"
+class="w-full border p-3 rounded-lg">
+</div>
+<input type="text" name="courseModule5" placeholder="Module5"
+class="w-full border p-3 rounded-lg">
+
+<!-- ACTION BUTTONS -->
+<div class="flex justify-end gap-4 mt-8">
+
+<button type="button"
+onclick="document.getElementById('createModal').classList.add('hidden')"
+class="px-4 py-2 border rounded-lg">
+Cancel
+</button>
+
+<button type="submit"
+class="bg-slate-900 text-white px-6 py-2 rounded-lg">
+Create Course
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</body>
+</html>

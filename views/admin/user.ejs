@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+
+<title>Users Management</title>
+</head>
+
+<%- include("../partials/toast") %>
+
+<body class="bg-slate-100">
+
+<div class="flex min-h-screen">
+
+<!-- SIDEBAR -->
+<aside class="w-72 bg-slate-900 text-white p-6">
+
+<h1 class="text-2xl font-bold mb-10">
+⚡ AlgoMoney Admin
+</h1>
+
+<nav class="space-y-3">
+
+<a href="/admin/dashboard" class="block hover:bg-slate-800 px-4 py-3 rounded-lg">
+<i class="fa fa-chart-line mr-2"></i> Dashboard
+</a>
+
+<a href="/admin/users" class="block bg-slate-800 px-4 py-3 rounded-lg">
+<i class="fa fa-users mr-2"></i> Users
+</a>
+
+</nav>
+</aside>
+
+<!-- MAIN -->
+<main class="flex-1 p-10">
+
+<!-- HEADER -->
+<div class="flex justify-between items-center mb-10">
+
+<h2 class="text-3xl font-bold">
+Users Management
+</h2>
+
+</div>
+
+<!-- USERS TABLE -->
+<div class="bg-white rounded-2xl shadow p-6">
+
+<table class="w-full text-left">
+
+<thead>
+<tr class="border-b">
+<th class="p-3">Name</th>
+<th>Email</th>
+<th>Role</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+<% users.forEach(user => { %>
+
+<tr class="border-b hover:bg-slate-50">
+
+<td class="p-3 font-semibold">
+<%= user.
+firstName %>
+</td>
+
+<td>
+<%= user.email %>
+</td>
+
+<td>
+<%= user.role || "User" %>
+</td>
+
+<td>
+<span class="px-3 py-1 rounded-full text-sm
+<%= user.isActive ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' %>">
+<%= user.isActive ? "Active" : "Inactive" %>
+</span>
+</td>
+
+<td class="space-x-3">
+
+<a href="/admin/toggle-user/<%= user._id %>"
+class="text-blue-600 font-semibold">
+Toggle
+</a>
+
+<form action="/admin/delete-user/<%= user._id %>?_method=DELETE" method="POST"
+ onsubmit="return confirm('Are you sure?')">
+<button type="submit" class="text-red-500 font-semibold">
+    Delete
+</button>
+</form>
+
+</td>
+
+</tr>
+
+<% }) %>
+
+</tbody>
+</table>
+
+</div>
+
+</main>
+
+</div>
+
+</body>
+</html>

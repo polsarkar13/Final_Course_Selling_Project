@@ -1,0 +1,233 @@
+<%- include("header") %>
+
+<!-- HERO SECTION -->
+<section class="text-center py-28 px-6 bg-gradient-to-b from-primary/20 via-slate-900 to-slate-950">
+
+  <div class="flex justify-center mb-8">
+    <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600
+        flex items-center justify-center shadow-lg shadow-green-500/30">
+      <i class="fas fa-brain text-white text-3xl"></i>
+    </div>
+  </div>
+
+  <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-6">
+    Trading <span class="text-primary">Courses</span>
+  </h1>
+
+  <p class="max-w-3xl mx-auto text-slate-400 text-lg">
+    Master the art of trading with our comprehensive courses designed by expert traders.
+    From basics to advanced strategies, we've got you covered.
+  </p>
+
+</section>
+
+
+<!-- STATS SECTION -->
+<section class="py-24 bg-slate-950">
+
+  <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8 text-center">
+
+    <!-- Card 1 -->
+    <div class="bg-slate-900 border border-slate-800 p-10 rounded-3xl
+                hover:border-primary transition duration-300 shadow-lg">
+
+      <h3 class="text-5xl font-extrabold text-primary mb-3">
+        1000+
+      </h3>
+
+      <p class="text-slate-400 text-lg">
+        Students Trained
+      </p>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="bg-slate-900 border border-slate-800 p-10 rounded-3xl
+                hover:border-primary transition duration-300 shadow-lg">
+
+      <h3 class="text-5xl font-extrabold text-primary mb-3">
+        95%
+      </h3>
+
+      <p class="text-slate-400 text-lg">
+        Success Rate
+      </p>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="bg-slate-900 border border-slate-800 p-10 rounded-3xl
+                hover:border-primary transition duration-300 shadow-lg">
+
+      <h3 class="text-5xl font-extrabold text-primary mb-3">
+        24/7
+      </h3>
+
+      <p class="text-slate-400 text-lg">
+        Community Support
+      </p>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="bg-slate-900 border border-slate-800 p-10 rounded-3xl
+                hover:border-primary transition duration-300 shadow-lg">
+
+      <h3 class="text-5xl font-extrabold text-primary mb-3">
+        Lifetime
+      </h3>
+
+      <p class="text-slate-400 text-lg">
+        Course Access
+      </p>
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- COURSES SECTION -->
+<section class="py-24 px-6 bg-slate-950">
+
+<div class="max-w-7xl mx-auto">
+
+  <div class="text-center mb-16">
+    <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-6">
+      Our Popular Courses
+    </h2>
+    <p class="max-w-2xl mx-auto text-slate-400 text-lg">
+      Choose from our expertly designed courses that have helped thousands of traders succeed.
+    </p>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-10">
+
+  <% courses.forEach((course, index) => { %>
+
+  <div class="rounded-3xl p-10 border transition duration-300 bg-slate-900 text-white hover:scale-105"
+       style="animation-delay:<%= index * 0.2 %>s;">
+
+    <% if(course.isPopular){ %>
+      <div class="bg-orange-500 text-white text-xs px-3 py-1 rounded-full inline-block mb-4">
+        Most Popular
+      </div>
+    <% } %>
+
+    <div class="flex justify-between items-center mb-4">
+      <span class="text-primary font-semibold">
+        <%= course.category %>
+      </span>
+      <span>⭐ <%= course.details.rating || 0 %></span>
+    </div>
+
+    <h3 class="text-2xl font-bold mb-4">
+      <%= course.title %>
+    </h3>
+
+  <p class="text-slate-400 mb-6">
+  <%= course.description
+        ? course.description.split('.')[0] + '.'
+        : '' %>
+</p>
+
+    <div class="flex justify-between text-sm text-slate-400 mb-6">
+      <span><i class="fas fa-clock mr-1"></i> <%= course.details.durationDays %> Days</span>
+      <span><i class="fas fa-users mr-1"></i> <%= course.details.studentsEnrolled || 0 %></span>
+    </div>
+
+    <ul class="space-y-3 mb-8 text-sm">
+      <% if(course.highlights){ %>
+        <% course.highlights.forEach(highlights => { %>
+          <li class="flex items-center gap-2">
+            <i class="fas fa-check text-primary"></i>
+            <%= highlights %>
+          </li>
+        <% }) %>
+      <% } %>
+    </ul>
+
+    <a href="/user/course/<%= course._id %>"
+       class="block bg-primary hover:opacity-90 text-white py-3 rounded-xl text-center font-semibold transition">
+       Get Started →
+    </a>
+
+  </div>
+
+  <% }) %>
+
+  </div>
+
+</div>
+
+</section>
+
+
+
+<!-- WHY CHOOSE SECTION -->
+<section class="py-24 px-6 bg-slate-900">
+
+<h2 class="text-center text-4xl font-bold text-white mb-6">
+Why Choose Our Courses?
+</h2>
+
+<p class="text-center text-slate-400 mb-16 max-w-3xl mx-auto">
+Experience world-class trading education with our comprehensive learning platform.
+</p>
+
+<div class="grid md:grid-cols-4 gap-10 max-w-7xl mx-auto">
+
+<div class="bg-slate-800 p-8 rounded-2xl text-center">
+<i class="fas fa-video text-primary text-3xl mb-4"></i>
+<h4 class="text-white font-semibold text-lg mb-2">HD Video Lessons</h4>
+<p class="text-slate-400 text-sm">
+High-quality practical content with real market examples.
+</p>
+</div>
+
+<div class="bg-slate-800 p-8 rounded-2xl text-center">
+<i class="fas fa-user-graduate text-primary text-3xl mb-4"></i>
+<h4 class="text-white font-semibold text-lg mb-2">Expert Instructors</h4>
+<p class="text-slate-400 text-sm">
+Learn from professional traders with 7+ years of experience.
+</p>
+</div>
+
+<div class="bg-slate-800 p-8 rounded-2xl text-center">
+<i class="fas fa-book text-primary text-3xl mb-4"></i>
+<h4 class="text-white font-semibold text-lg mb-2">Comprehensive Materials</h4>
+<p class="text-slate-400 text-sm">
+Detailed PDFs, templates and practical assignments included.
+</p>
+</div>
+
+<div class="bg-slate-800 p-8 rounded-2xl text-center">
+<i class="fas fa-certificate text-primary text-3xl mb-4"></i>
+<h4 class="text-white font-semibold text-lg mb-2">Certification</h4>
+<p class="text-slate-400 text-sm">
+Get certified upon completion and showcase your expertise.
+</p>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- CTA SECTION -->
+<section class="py-20 bg-gradient-to-r from-green-600 to-emerald-600 text-center text-white">
+
+<h2 class="text-4xl font-bold mb-6">
+Get One-on-One Interactions with the Founder
+</h2>
+
+<p class="mb-8">
+Enroll today and accelerate your trading journey.
+</p>
+
+<a href="/user/contact"
+   class="bg-white text-green-600 px-8 py-3 rounded-xl font-semibold">
+   Get Course Consultants →
+</a>
+
+</section>
+
+<%- include("footer") %>
