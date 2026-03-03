@@ -1,11 +1,9 @@
 require ("dotenv").config()
-
 const Dbconnection = require ("./app/config/Db");
-Dbconnection();
-
 const app = require("./app/router/index.router")
 
 
+Dbconnection();
 
 
 const port = process.env.PORT;
